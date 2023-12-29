@@ -1,52 +1,31 @@
 package errors
 
 import (
-	"log"
-	"regexp"
-	"strings"
+	"errors"
+
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
-func HandleException(err error) {
+func HandleException(err error) (systemErr, userErr string) {
 	switch err.(type) {
 	case DBError:
-		HandleDBException(err)
+		return HandleDBException(err)
 
 	case GcpError:
-		HandleGcpException(err)
+		return HandleGcpException(err)
 
 	default:
-		HandleDefaultException(err)
+		return HandleDefaultException(err)
 	}
 }
 
-func HandleDefaultException(err error) {
-	// check if its a sql error
-	if strings.Contains(err.Error(), "sql") {
-		HandleSQLException(err)
-		return
-	}
-
-	// check sql state
-	sqlState := getSQLState(err)
-	if sqlState != "" {
-		HandleSQLStateException(sqlState)
+func HandleDefaultException(err error) (systemErr, userErr string) {
+	// check for sql state error
+	var pgErr *pgconn.PgError
+	if errors.As(err, &pgErr) {
+		return HandlePGXException(pgErr)
 	}
 
 	// Default exception handling
-	log.Println("[[UNKNOWN ERROR]] :", err.Error())
+	return "[[Un Caught Error]] :" + err.Error(), "Service is down, please try again later"
 }
-
-func getSQLState(e error) string {
-	re := regexp.MustCompile(`SQLSTATE (\w+)`)
-
-	// Find the match in the error message
-	match := re.FindStringSubmatch(e.Error())
-
-	// Extract and return the SQLSTATE
-	if len(match) > 1 {
-		return match[1]
-	} else {
-		return ""
-	}
-}
-

@@ -2,7 +2,6 @@ package errors
 
 import (
 	"errors"
-	"log"
 )
 
 type DBError struct {
@@ -12,9 +11,7 @@ type DBError struct {
 // Custom DB errors
 var (
 	ErrDBConnectionFailed = DBError{ErrMsg: "DB connection failed"}
-	ErrDBQueryFailed = DBError{ErrMsg: "DB query failed"}
-	ErrRowNotFound = DBError{ErrMsg: "Not found"}
-	ErrRowDuplicate = DBError{ErrMsg: "Duplicate row"}
+	ErrDBQueryFailed      = DBError{ErrMsg: "DB query failed"}
 )
 
 func (e DBError) Error() string {
@@ -25,22 +22,16 @@ func (e DBError) UnWrap() error {
 	return errors.New(e.ErrMsg)
 }
 
-func HandleDBException(err error) {
+func HandleDBException(err error) (string, string) {
 	switch err {
 	case ErrDBConnectionFailed:
-		log.Println(ErrDBConnectionFailed.Error())
-	
-	case ErrDBQueryFailed:
-		log.Println(ErrDBQueryFailed.Error())
+		return ErrDBConnectionFailed.Error(), ErrDBConnectionFailed.Error()
 
-	case ErrRowNotFound:
-		log.Println(ErrRowNotFound.Error())
-	
-	case ErrRowDuplicate:
-		log.Println(ErrRowDuplicate.Error())
-	
+	case ErrDBQueryFailed:
+		return ErrDBQueryFailed.Error(), ErrDBQueryFailed.Error()
+
 	default:
-		log.Println("Un Caught Error : ", err.Error())
-		
+		return "[[Un Caught Error]] :" + err.Error(), "[[Un Caught Error]] :" + err.Error()
+
 	}
 }

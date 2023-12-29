@@ -2,7 +2,6 @@ package errors
 
 import (
 	"errors"
-	"log"
 )
 
 type GcpError struct {
@@ -24,16 +23,19 @@ func (e GcpError) UnWrap() error {
 	return errors.New(e.ErrMsg)
 }
 
-func HandleGcpException(err error) {
+func HandleGcpException(err error) (string, string) {
 	switch err {
 	case ErrGcpConnectionFailed:
-		log.Println(ErrGcpConnectionFailed.ErrMsg)
+		return ErrGcpConnectionFailed.Error(), ErrGcpConnectionFailed.Error()
 
 	case ErrGcpQueryFailed:
-		log.Println(ErrGcpQueryFailed.ErrMsg)
+		return ErrGcpQueryFailed.Error(), "Unable to fetch data from GCP"
+
+	case ErrGcpPubsubFailed:
+		return ErrGcpPubsubFailed.Error(), "Unable to publish message to GCP"
 
 	default:
-		log.Println("Un Caught Error : ", err.Error())
+		return "[[Un Caught Error]] :" + err.Error(), "Service is down, please try again later"
 
 	}
 }

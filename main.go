@@ -1,15 +1,13 @@
 package main
 
 import (
-	"database/sql"
 	err "error-berror/pkg/errors"
 	"errors"
+	"log"
 )
 
 func main() {
-	err.HandleDBException(err.ErrDBQueryFailed)
-	err.HandleException(sql.ErrNoRows)
-	err.HandleException(errors.New("some error"))
-
-	println()
+	log.Println(err.HandleException(err.ErrDBQueryFailed))
+	log.Println(err.HandleException(err.ErrGcpPubsubFailed))
+	log.Println(err.HandleException(errors.New("some error")))
 }
