@@ -33,6 +33,12 @@ func handleDefaultException(err error) (systemErr, userErr string) {
 		return
 	}
 
+	// check for mongo error
+	systemErr, userErr = handleMongoException(err)
+	if systemErr != "" {
+		return
+	}
+
 	// Default exception handling
 	return "[[Un Caught Error]] :" + err.Error(), "Service is down, please try again later"
 }
