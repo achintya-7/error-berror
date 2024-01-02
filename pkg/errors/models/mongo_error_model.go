@@ -7,7 +7,7 @@ type MongoError struct {
 }
 
 func (e MongoError) Error() string {
-	return "[PGX ERROR] : " + e.ErrMsg
+	return "[MONGO ERROR] : " + e.ErrMsg
 }
 
 func (e MongoError) UnWrap() error {
