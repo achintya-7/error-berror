@@ -1,8 +1,7 @@
 package handlers
 
 import (
-	"error-berror/pkg/errors/models"
-
+	"github.com/achintya-7/error-berror/models"
 	"github.com/jackc/pgx/v5"
 )
 

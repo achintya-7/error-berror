@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"error-berror/pkg/errors/models"
 	"fmt"
 
+	"github.com/achintya-7/error-berror/models"
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5/pgconn"
 )
@@ -38,7 +38,7 @@ func handlePgxStateException(err *pgconn.PgError) (string, string) {
 		return models.PGXError{ErrMsg: err.Message}.Error(), fmt.Sprintf("Duplicate foreign key issue with : %s", err.ConstraintName)
 
 	default:
-		return "[Uncaught PGX Error] :" + "[Code] =>" + err.Code + "[Message] =>" + err.Message + "[Query] =>" + err.InternalQuery, "Service is down, please try again later"
+		return "[Unhandled PGX Error] :" + "[Code] =>" + err.Code + "[Message] =>" + err.Message + "[Query] =>" + err.InternalQuery, "Service is down, please try again later"
 	}
 
 }

@@ -1,26 +1,12 @@
 package handlers
 
 import (
-	"error-berror/pkg/errors/models"
 	"errors"
 
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
-func HandleException(err error) (systemErr, userErr string) {
-	switch err.(type) {
-	case models.DBError:
-		return handleDBException(err)
-
-	case models.GcpError:
-		return handleGcpException(err)
-
-	default:
-		return handleDefaultException(err)
-	}
-}
-
-func handleDefaultException(err error) (systemErr, userErr string) {
+func HandleDefaultException(err error) (systemErr, userErr string) {
 	// check for sql state error
 	var pgErr *pgconn.PgError
 	if errors.As(err, &pgErr) {
@@ -40,5 +26,5 @@ func handleDefaultException(err error) (systemErr, userErr string) {
 	}
 
 	// Default exception handling
-	return "[[Un Caught Error]] :" + err.Error(), "Service is down, please try again later"
+	return "[[Unhandled Error]] :" + err.Error(), "Service is down, please try again later"
 }

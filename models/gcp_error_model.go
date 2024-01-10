@@ -7,7 +7,7 @@ type GcpError struct {
 }
 
 func (e GcpError) Error() string {
-	return "[DB ERROR] : " + e.ErrMsg
+	return "[GCP ERROR] : " + e.ErrMsg
 }
 
 func (e GcpError) UnWrap() error {

@@ -1,8 +1,7 @@
 package handlers
 
 import (
-	"error-berror/pkg/errors/models"
-
+	"github.com/achintya-7/error-berror/models"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -19,10 +18,10 @@ func handleMongoException(err error) (systemErr, userErr string) {
 
 	case mongo.ErrClientDisconnected:
 		return models.MongoError{ErrMsg: err.Error()}.Error(), "Mongo Client disconnected"
-	
+
 	case mongo.ErrMultipleIndexDrop:
 		return models.MongoError{ErrMsg: err.Error()}.Error(), "Multiple index drop"
-	
+
 	case mongo.ErrNilValue:
 		return models.MongoError{ErrMsg: err.Error()}.Error(), "Mongo Nil value"
 
